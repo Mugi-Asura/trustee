@@ -5,7 +5,9 @@ The addon takes lists of Trust character names with somewhat loose input rules a
 
 Note: Normally it would be better to keep the script itself hidden in memory to avoid easy tampering (and it's just good practice), but Ashita v3's command/script execution interface in Lua limits that possibility (from what I can tell so far) as of this writing. If the functionality is expanded in the future (and I'm still playing FFXI; I play in phases) I'll update it.
 
-**Note 2: I do play on Asura, but my name is not Mugi. I don't know how much Square cares about Windower/Ashita these days so I picked another handle to avoid a potential ban. If there's a person on Asura named Mugi, I'm sorry ahead of time if people are messaging you about some obscure FFXI addon.**
+Note 2: I got the list of Trust names from FFXI Encyclopedia, so it may be missing some. I don't personally have anywhere near all the Trusts, but if it's missing any just let me know and I'll add it to the names database for everyone to enjoy.
+
+**Note 3: I do play on Asura, but my name is not Mugi. I don't know how much Square cares about Windower/Ashita these days so I picked another handle to avoid a potential ban. If there's a person on Asura named Mugi, I'm sorry ahead of time if people are messaging you about some obscure FFXI addon.**
 
 ## Commands
 The addon can be loaded into Ashita by placing the files into: ./Ashita/addons/trustee and running the "/addon load trustee" command from the Final Fantasy XI chat bar or via a script file (such as the Ashita startup script). The available commands are as follows:
