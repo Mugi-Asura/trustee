@@ -30,7 +30,7 @@ The addon can be loaded into Ashita by placing the files into: ./Ashita/addons/t
 This command creates a new Trust set which may be summoned later using "/tr SetName". SetName can be any character string and uniquely identifies the registered set. If SetName is already a set name, it will be overwritten.
 TrustList is a comma-separated list of Trust names which will be included in the set named SetName. Capitalization does not matter. Any spaces included in the TrustList will be removed. 
 
-For a list of shorthand names available for a given Trust (to include in a TrustList), please use the command "/trustee char TrustName", where TrustName is the Trust\'s full name from the in-game Trust menu.
+For a list of shorthand names available for a given Trust (to include in a TrustList), please use the command "/tr char TrustName", where TrustName is the Trust\'s full name from the in-game Trust menu.
 
 The following examples all create differently named sets with the exact same Trust characters:
 ```
