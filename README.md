@@ -9,6 +9,17 @@ Note 2: I got the list of Trust names from FFXI Encyclopedia, so it may be missi
 
 **Note 3: I do play on Asura, but my name is not Mugi. I don't know how much Square cares about Windower/Ashita these days so I picked another handle to avoid a potential ban. If there's a person on Asura named Mugi, I'm sorry ahead of time if people are messaging you about some obscure FFXI addon.**
 
+## Updates
+
+**v1.0.0** is the current version.
+
+### Potential Future Updates
+
+1. **Fix the command function code.** It's quite monolithic right now. I started breaking things down into functions, but decided to post this functional version as a starting point.
+2. **Add some colours to the addon output.** It's currently all white and that makes it difficult to read. I'll probably colour-code different labels and outputs to make it easier to know when the addon is pushing information to the user.
+3. **Better (any) algorithmic efficiency.** I mostly coded things that worked rather than things that were fast. However, it's FFXI and I doubt the game is stressing anyone's computer enough that my O(n<sup>2</sup>) search algorithms over ~200 elements are destroying their performance.
+
+
 ## Commands
 The addon can be loaded into Ashita by placing the files into: ./Ashita/addons/trustee and running the "/addon load trustee" command from the Final Fantasy XI chat bar or via a script file (such as the Ashita startup script). The available commands are as follows:
 
