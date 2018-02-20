@@ -3,7 +3,7 @@ Trustee is a Trust management addon for Ashita (FFXI). It allows users to create
 
 The addon takes lists of Trust character names with somewhat loose input rules and provides a simple interface for summoning entire parties of Trusts without the need for lots of script files or macros. Each set can be named and they're all stored by the addon itself in JSON files, meaning you end up with a small database of Trust summoning instructions. When a Trust set is summoned, the addon pulls the relevant Trust set from the database, creates a new script file to hold the summoning instructions, then executes the script. 
 
-Note: Normally it would be better to keep the script itself hidden in memory to avoid easy tampering (and it's just good practice), but Ashita v3's command/script execution interface in Lua limits that possibility (from what I can tell so far) as of this writing. If the functionality is expanded in the future (and I'm still playing FFXI; I play in phases) I'll update it.
+Note: If the Ashita functionality is expanded in the future (and I'm still playing FFXI; I play in phases) I'll update this addon to support in-memory script execution rather than dynamically creating scripts and running them from the settings folder.
 
 Note 2: I got the list of Trust names from FFXI Encyclopedia, so it may be missing some. I don't personally have anywhere near all the Trusts, but if it's missing any just let me know and I'll add it to the names database for everyone to enjoy.
 
