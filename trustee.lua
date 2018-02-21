@@ -503,7 +503,7 @@ function summonTrustParty(partyName)
 	end
 	
 	-- Execute the newly created script file as if the user ran the execute command
-	print('[Trustee][Sets] Summoning Trust Set "' .. partyName .. '": [ ' .. getTrustSetString(partyName) .. ' ]   Starting in 2 seconds...');
+	print('[Trustee][Sets] Summoning Trust Set "' .. partyName .. '": [ ' .. getTrustSetString(partyName) .. ' ]   Starting in 4 seconds...');
 	AshitaCore:GetChatManager():RunScript(true, '../addons/trustee/settings/recent.script.txt');
 	
 	return true;
