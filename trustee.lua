@@ -532,7 +532,7 @@ function createSummoningScript(trustSet)
 	end
 	
 	-- Add a command to unsummon any existing Trusts to the script file
-	scriptFile:write('/refa all\n/wait 2\n');
+	scriptFile:write('/refa all\n/wait 4\n');
 	
 	-- Add each Trust command to the script file, except the last
 	for i=1,length(trustSet)-1 do
