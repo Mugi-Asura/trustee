@@ -13,7 +13,9 @@ Note 2: I got the list of Trust names from FFXI Encyclopedia, so it may be missi
 
 ## Updates
 
-**v1.0.0** is the current version.
+**v1.0.1**: Bugfix: in some cases with a full party, Trusts would not un-summon fast enough for the next party. Increased the un-summon buffer time to 4 seconds.
+
+**v1.0.0**: Initial commit.
 
 ### Potential Future Updates
 
@@ -77,11 +79,11 @@ The summoning process uses regular macro-style wait commands to ensure proper Tr
 
 The length of time required to summon a Trust set is based on size and takes the following times:
 ```   
-1 Trust  = 8  seconds
-2 Trusts = 14 seconds
-3 Trusts = 20 seconds
-4 Trusts = 26 seconds
-5 Trusts = 32 seconds
+1 Trust  = 10  seconds
+2 Trusts = 16 seconds
+3 Trusts = 22 seconds
+4 Trusts = 28 seconds
+5 Trusts = 34 seconds
 ```
 ### List Trust Sets Command:
  
