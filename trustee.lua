@@ -3,7 +3,7 @@
 --------------------------------------------------------------
 _addon.author   = 'Mugi';
 _addon.name     = 'Trustee';
-_addon.version  = '1.0.0';
+_addon.version  = '1.0.1';
 
 --------------------------------------------------------------
 -- Load Required Libraries
