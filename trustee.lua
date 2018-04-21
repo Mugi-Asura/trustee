@@ -742,7 +742,8 @@ function displayIndividualHelp(commandName)
 	if commandName == 'add' then
 		print('[Trustee][Help] Add Trust Set Command:');
 		print(' ');
-		print('Syntax: /trustee add SetName [TrustList|party]');
+		print('Syntax: /trustee add SetName TrustList');
+		print('Syntax: /trustee add SetName party');
 		print('This command creates a new Trust set which may be summoned later using /tr SetName.');
 		print('SetName can be any character string and uniquely identifies the registered set. If SetName is');
 		print('     already a set name, it will be overwritten. Note that SetNames are case sensitive.');
