@@ -13,6 +13,8 @@ Note 2: I got the list of Trust names from FFXI Encyclopedia, so it may be missi
 
 ## Updates
 
+**v1.1.0**: New feature: Generate Trust sets from your current party list (with restrictions: see "add" help information). Fix: Updated the help information to mention case sensitive inputs.
+
 **v1.0.1**: Bugfix: in some cases with a full party, Trusts would not un-summon fast enough for the next party. Increased the un-summon buffer time to 4 seconds.
 
 **v1.0.0**: Initial commit.
@@ -32,8 +34,9 @@ The available commands are as follows:
 ### Add Trust Set Command:
 
 **Syntax:** */trustee add SetName TrustList*
+**Syntax:** */trustee add SetName party*
 
-This command creates a new Trust set which may be summoned later using "/tr SetName". SetName can be any character string and uniquely identifies the registered set. If SetName is already a set name, it will be overwritten.
+This command creates a new Trust set which may be summoned later using "/tr SetName". SetName can be any character string and uniquely identifies the registered set. If SetName is already a set name, it will be overwritten. Note that SetNames are case sensitive.
 TrustList is a comma-separated list of Trust names which will be included in the set named SetName. Capitalization does not matter. Any spaces included in the TrustList will be removed. 
 
 For a list of shorthand names available for a given Trust (to include in a TrustList), please use the command "/tr char TrustName", where TrustName is the Trust\'s full name from the in-game Trust menu.
@@ -46,11 +49,15 @@ The following examples all create differently named sets with the exact same Tru
 /tr add set4 aPuRuRu,Semih Lafihna, TRION
 ```
 
+Rather than including a list of Trusts, you may use the "party" keyword. This will create a Trust set containing the Trusts which are currently present in your party. 
+
+**Note that this is incompatible with alternate versions of Trusts (such as Lion vs. Lion II) because the game does not differentiate those Trusts once they\'re in your party. For example, after summoning Lion II, her name will appear as Lion in the party list and thus Trustee will only save their default name (Lion, not Lion II) in the Trust set.**
+
 ### Remove Trust Set Command:
  
 **Syntax:** */trustee remove SetName*
 
-SetName can be any character string and uniquely identifies the registered set. If SetName references a set in the trust set database, the associated Trust set will be removed. Otherwise this command will do nothing except show an alert message.
+SetName can be any character string and uniquely identifies the registered set. If SetName references a set in the trust set database, the associated Trust set will be removed. Otherwise this command will do nothing except show an alert message. Note that SetNames are case sensitive.
 
 ### Verbose Toggle Command:
  
@@ -73,7 +80,7 @@ Toggles automatic backups on or off, depending on which command you use. While t
  
 **Syntax:** */trustee SetName*
 
-This command summons the Trust set uniquely identified by the SetName value. If the SetName value is not found in the Trust set database, no Trust set will be summoned.
+This command summons the Trust set uniquely identified by the SetName value. If the SetName value is not found in the Trust set database, no Trust set will be summoned. Note that SetNames are case sensitive.
 
 The summoning process uses regular macro-style wait commands to ensure proper Trust cast timing.
 
