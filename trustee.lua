@@ -3,7 +3,7 @@
 --------------------------------------------------------------
 _addon.author   = 'Mugi';
 _addon.name     = 'Trustee';
-_addon.version  = '1.0.1';
+_addon.version  = '1.1.0';
 
 --------------------------------------------------------------
 -- Load Required Libraries
@@ -137,6 +137,7 @@ function commandFunction(command, commandType)
 		-- Commands with two tokens:
 		--   trustee tName
 		--   trustee list
+		--   trustee save
 		--   trustee backup
 		--   trustee help
 		if tokenCount == 2 then
@@ -144,6 +145,21 @@ function commandFunction(command, commandType)
 			if parameters[2] == 'list' then
 				-- Print the current list from the command function
 				printCurrentTrustLists('[List]');
+				
+				-- Finished processing this command
+				return true;
+			end
+		
+			-- Handle the case for a save command
+			if parameters[2] == 'save' then
+				-- Save the addon settings to a file
+				saveSettings('[Unload]');
+				
+				-- Save the command list to a file without a backup tag
+				saveTrustList('','[Unload]');
+				
+				-- Print confirmation
+				print('[Trustee][Save] The addon settings and Trust list have been saved.');
 				
 				-- Finished processing this command
 				return true;
@@ -257,7 +273,11 @@ function commandFunction(command, commandType)
 			end
 		end
 		
-		-- Handle the case for adding a new trust set to the trust list
+		-- If our command has more than three tokens, process it here.
+		-- Commands with more than three tokens:
+		--   trustee add SetName ListOfCharNames
+		--   trustee add SetName party
+		--   trustee char charNamePart1 charNamePart2
 		if tokenCount > 3 then
 			-- Handle the case for a char command (two-part names)
 			if parameters[2] == 'char' then
@@ -277,11 +297,34 @@ function commandFunction(command, commandType)
 					return true;
 				end
 				
-				-- Extract all the relevant information for easy usage.
-				-- The list of names can be a single element or multiple, but
-				-- the 'getCipherNames' function can handle that.
+				-- Extract all the relevant information for easy usage.				
 				local setName = parameters[3];
-				local setCiphers = getCipherNames(parameters);
+				local setCiphers = nil;
+				
+				-- If we're doing a party add, we collect the party names
+				-- and extract the cipher list from them. If we're doing a
+				-- regular add we extract the cipher list from the parameters.
+				if parameters[4] == 'party' then
+					setCiphers = { };
+					
+					-- Extract each name from the party list. If it's a cipher, store it in the cipher set.
+					for i=0, AshitaCore:GetDataManager():GetParty():GetAllianceParty0MemberCount()-1 do
+						local cipherName = AshitaCore:GetDataManager():GetParty():GetMemberName(i):lower();
+						if isCipher(cipherName) then
+							table.insert(setCiphers, cipherName);
+						end
+					end
+
+					-- If we found zero ciphers in the party, we cannot create a set and print an error.
+					if length(setCiphers) == 0 then
+						print('[Trustee][Add][Party] Cannot create a Trust set. Your party has no Trusts to store.');
+						return true;
+					end
+				else
+					-- The list of names can be a single element or multiple, but
+					-- the 'getCipherNames' function can handle that.
+					setCiphers = getCipherNames(parameters);				
+				end
 
 				-- Convert the Cipher short names to the Trust spell names
 				for i=1,length(setCiphers) do
@@ -578,7 +621,7 @@ end
 -- the list of parameters. This function can break the Cipher
 -- names out of any properly formatted list of names provided
 -- by the user.
--- Return: a properly formatted string of Cipher names.
+-- Return: a properly formatted table of Cipher names.
 --------------------------------------------------------------
 function getCipherNames(list)
 	-- Data Format: /command add setName CommaSeparatedListOfNames
@@ -607,7 +650,7 @@ function getCipherNames(list)
 end
 
 --------------------------------------------------------------
--- convertCipherNames Function: 
+-- getCipherNameFromShorthand Function: 
 -- When called, replaces all the short hand cipher names to
 -- their exact trust spell names.
 -- Return: a list of trust spell names.
@@ -629,6 +672,28 @@ function getCipherNameFromShorthand(cipher)
 end
 
 --------------------------------------------------------------
+-- isCipher Function: 
+-- When called, checks to ensure the input cipher is in the
+-- cipher list.
+-- Return: true if the cipher exists, otherwise false.
+--------------------------------------------------------------
+function isCipher(cipher)
+	-- Check every shorthand name of every cipher.
+	-- If the shorthand name is found in a cipher's full name,
+	-- return true.
+	for k, v in pairs(nameList) do
+		for i, s in pairs(v) do
+			if s == cipher then
+				return true;
+			end
+		end
+	end
+	
+	-- If no name could be matched, return nil
+	return false;
+end
+
+--------------------------------------------------------------
 -- displayHelp Function: 
 -- When called, prints the generic help block to the screen.
 -- Return: Nothing (Not Required)
@@ -639,10 +704,14 @@ function displayHelp()
 	print('The addon functionality can be accessed using the following commands:');
 	print('/trustee add SetName TrustList');
 	print('     This command creates a Trust set named SetName which summons the Trusts in the TrustList.');
+	print('/trustee add SetName party');
+	print('     This command creates a Trust set named SetName which contains all the Trusts currently in your party.');
 	print('/trustee remove SetName');
 	print('     Removes the Trust set named SetName.');
 	print('/trustee verbose on/off');
 	print('     Turn verbose mode on or off.');
+	print('/trustee save');
+	print('     Save the current settings and Trust list to a file.');	
 	print('/trustee backup on/off');
 	print('     Turn backup mode on or off.');
 	print('/trustee backup');
@@ -673,10 +742,10 @@ function displayIndividualHelp(commandName)
 	if commandName == 'add' then
 		print('[Trustee][Help] Add Trust Set Command:');
 		print(' ');
-		print('Syntax: /trustee add SetName TrustList');
+		print('Syntax: /trustee add SetName [TrustList|party]');
 		print('This command creates a new Trust set which may be summoned later using /tr SetName.');
 		print('SetName can be any character string and uniquely identifies the registered set. If SetName is');
-		print('     already a set name, it will be overwritten.');
+		print('     already a set name, it will be overwritten. Note that SetNames are case sensitive.');
 		print('TrustList is a comma-separated list of Trust names which will be included in the set named SetName.');
 		print('     Name capitalization does not matter. Any spaces included in the TrustList will be removed. For');
 		print('     a list of shorthand names available for a given Trust (to include in a TrustList), please use');
@@ -687,13 +756,18 @@ function displayIndividualHelp(commandName)
 		print('     /tr add set2 apururu,semih, Trion');
 		print('     /tr add set3 Apururu,semih,trion');
 		print('     /tr add set4 aPuRuRu,Semih Lafihna, TRION');
+		print('Rather than including a list of Trusts, you may use the "party" keyword. This will create a Trust set');
+		print('containing the Trusts which are currently present in your party. Note that this is incompatible with');
+		print('alternate versions of Trusts (such as Lion vs. Lion II) because the game does not differentiate those');
+		print('Trusts once they\'re in your party. For example, after summoning Lion II, her name will appear as Lion in');
+		print('the party list and thus Trustee will only save their default name (Lion, not Lion II) in the Trust set.');
 	elseif commandName == 'remove' then
 		print('[Trustee][Help] Remove Trust Set Command:');
 		print(' ');
 		print('Syntax: /trustee remove SetName');
 		print('SetName can be any character string and uniquely identifies the registered set. If SetName references');
 		print('     a set in the trust set database, the associated Trust set will be removed. Otherwise this command');
-		print('     will do nothing except show an alert message.');
+		print('     will do nothing except show an alert message. Note that SetNames are case sensitive.');
 	elseif commandName == 'verbose' then
 		print('[Trustee][Help] Verbose Toggle Command:');
 		print(' ');
@@ -714,14 +788,15 @@ function displayIndividualHelp(commandName)
 		print(' ');
 		print('Syntax: /trustee SetName');
 		print('This command summons the Trust set uniquely identified by the SetName value. If the SetName value');
-		print('     is not found in the Trust set database, no Trust set will be summoned.');
+		print('     is not found in the Trust set database, no Trust set will be summoned. Note that SetNames');
+		print('     are case sensitive.');
 		print('The summoning process uses regular macro-style wait commands to ensure proper Trust cast timing.');
 		print('The length of time required to summon a Trust set is based on size and takes the following times:');
-		print('     1 Trust  = 8  seconds');
-		print('     2 Trusts = 14 seconds');
-		print('     3 Trusts = 20 seconds');
-		print('     4 Trusts = 26 seconds');
-		print('     5 Trusts = 32 seconds');
+		print('     1 Trust  = 10 seconds');
+		print('     2 Trusts = 16 seconds');
+		print('     3 Trusts = 22 seconds');
+		print('     4 Trusts = 28 seconds');
+		print('     5 Trusts = 34 seconds');
 	elseif commandName == 'list' then
 		print('[Trustee][Help] List Trust Sets Command:');
 		print(' ');
