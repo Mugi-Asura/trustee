@@ -13,6 +13,8 @@ Note 2: I got the list of Trust names from FFXI Encyclopedia, so it may be missi
 
 ## Updates
 
+**v1.1.1**: Change: Updated the name map to better support gathering Trust names from the party list when using "/trustee add SetName party".
+
 **v1.1.0**: New feature: Generate Trust sets from your current party list (with restrictions: see "add" help information). Fix: Updated the help information to mention case sensitive inputs.
 
 **v1.0.1**: Bugfix: in some cases with a full party, Trusts would not un-summon fast enough for the next party. Increased the un-summon buffer time to 4 seconds.
